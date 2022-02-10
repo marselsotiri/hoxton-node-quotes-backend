@@ -13,7 +13,7 @@ const cors = require("cors")
 const quotes: Quote[] = [
     {
       id: 1,
-      content: "When you have a dream, you’ve got to grab it and never let go.",
+      content: "When you have a dream, you've got to grab it and never let go.",
       author: "Carol Burnett"
     },
     {
@@ -63,7 +63,7 @@ const quotes: Quote[] = [
     },
     {
         id: 11,
-        content: "You define your own life. Don’t let other people write your script.",
+        content: "You define your own life. Don't let other people write your script.",
         author: "Oprah Winfrey"
       },
       {
