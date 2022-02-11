@@ -1,4 +1,5 @@
 import express from "express"
+import cors from "cors"
 
 type Quote = {
     id: number
@@ -8,7 +9,7 @@ type Quote = {
 
 const app = express()
 const PORT = 4000
-const cors = require("cors")
+
 
 const quotes: Quote[] = [
     {
