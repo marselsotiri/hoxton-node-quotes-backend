@@ -106,6 +106,20 @@ app.get('/randomQuote', (req, res) => {
     res.send(quote)
 })
 
+app.get("/search", function (req, res) {
+    const filters = req.query
+    const filterByUsers = quotes.filter(quote => {
+        let isValid = true
+        for (const key in filters) {
+            const quoteKey = key as keyof Quote
+            console.log(quoteKey, quote[quoteKey], filters[quoteKey]);
+            isValid = isValid && quote[quoteKey] == filters[quoteKey]
+        }
+        return isValid
+    })
+    res.send(filterByUsers)
+})
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 })
