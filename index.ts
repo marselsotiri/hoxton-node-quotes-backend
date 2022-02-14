@@ -12,6 +12,7 @@ type Quote = {
 
 const app = express()
 const PORT = 4000
+app.use(express.json());
 
 
 const quotes: Quote[] = [
@@ -44,7 +45,7 @@ const quotes: Quote[] = [
         content: "The bad news is time flies. The good news is you're the pilot.",
         firstName: "Michael",
         lastName: "Altshuler",
-        age: 65 ,
+        age: 65,
         image: "https://everipedia-storage.s3-accelerate.amazonaws.com/ProfilePics/6666696530416654350.png"
     },
     {
@@ -166,11 +167,51 @@ app.get("/quotes/:id", (req, res) => {
     const id = Number(req.params.id);
     const match = quotes.find((quote) => quote.id === id);
     if (match) {
-      res.send(match);
+        res.send(match);
     } else {
-      res.status(404).send({ error: "Quote not found." });
+        res.status(404).send({ error: "Quote not found." });
     }
-  });
+})
+
+app.post("/quotes", (req, res) => {
+    const content = req.body.content;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const age = req.body.age;
+    const image = req.body.image;
+
+    const errors = [];
+    if (typeof content !== "string") {
+        errors.push("Content is missing or not a string");
+    }
+    if (typeof firstName !== "string") {
+        errors.push("First name is missing or not a string");
+    }
+    if (typeof lastName !== "string") {
+        errors.push("Last name is missing or not a string");
+    }
+    if (typeof age !== "number") {
+        errors.push("Age should be a number higher than 0!");
+    }
+    if (typeof image !== "string") {
+        errors.push("Image is missing or not a string");
+    }
+
+    if (errors.length === 0) {
+        const newQuote: Quote = {
+            id: Math.random(),
+            content: content,
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            image: image
+        };
+        quotes.push(newQuote);
+        res.status(201).send(newQuote);
+    } else {
+        res.status(400).send({ errors: errors });
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
