@@ -15,7 +15,7 @@ const PORT = 4000
 app.use(express.json());
 
 
-const quotes: Quote[] = [
+let quotes: Quote[] = [
     {
         id: Math.random(),
         content: "When you have a dream, you've got to grab it and never let go.",
@@ -212,6 +212,85 @@ app.post("/quotes", (req, res) => {
         res.status(400).send({ errors: errors });
     }
 })
+
+// DOG ENDPOINTS
+app.get('/quotes', (req, res) => {
+    // search here is a *query*
+    const search = req.query.search;
+    const age = req.query.age;
+    // const idFrom = Number(req.query.idFrom)
+    // const idTo = Number(req.query.idTo)
+  
+    let quotesToSend = quotes;
+  
+    if (typeof search === 'string') {
+      console.log('Filtering quotes with search:', search);
+      quotesToSend = quotesToSend.filter(
+        (quote) =>
+          quote.firstName.toUpperCase().includes(search.toUpperCase()) ||
+          quote.lastName.toUpperCase().includes(search.toUpperCase())
+      );
+    }
+  
+    if (typeof age === "number") {
+        quotesToSend = quotesToSend.filter(
+        (quote) => quote.age === age
+      );
+    }
+  
+    // if (typeof idFrom === 'number' && !Number.isNaN(idFrom)) {
+    //   quotesToSend = quotesToSend.filter(quote => quote.id >= idFrom)
+    // }
+  
+    res.send(quotesToSend);
+  });
+
+  app.patch('/quotes/:id', (req, res) => {
+    const id = Number(req.params.id);
+    // update keys from an existing resource
+    // we only update existing keys
+    // keys that are not in the resource should be ignored
+    // or we should send the user an error
+    // send back the updated resource
+  
+    // happy path: every key given exists and is the right type // ✅
+    // sad path: wrong keys or wrong types provided by user // ❌
+  
+    const quotesToChange = quotes.find((quote) => quote.id === id);
+  
+    if (quotesToChange) {
+      // we can only change the quote if it exists
+      if (typeof req.body.firstName === 'string') quotesToChange.firstName = req.body.firstName;
+      if (typeof req.body.lastName === 'string') quotesToChange.lastName = req.body.lastName;
+      if (typeof req.body.age === 'number') quotesToChange.age = req.body.age;
+      if (typeof req.body.image === 'string') quotesToChange.image = req.body.image;
+
+      res.send(quotesToChange);
+    } else {
+      res.status(404).send({ error: 'Quote not found.' });
+    }
+  });
+
+  app.delete('/quotes/:id', (req, res) => {
+    // happy path: id is sent and it's a number and we find the quote and we delete the quote
+    // sad path: id is wrong format, or quote not found
+  
+    // get id
+    const id = Number(req.params.id);
+  
+    // find quote
+    const match = quotes.find((quote) => quote.id === id);
+  
+    // delete quote if it exists
+    if (match) {
+      quotes = quotes.filter((quote) => quote.id !== id);
+      res.send({ message: 'Quote deleted successfully.' });
+    } else {
+      res.status(404).send({ error: 'Quote not found.' });
+    }
+  });
+  
+  
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
