@@ -213,7 +213,7 @@ app.post("/quotes", (req, res) => {
     }
 })
 
-// DOG ENDPOINTS
+// Quote ENDPOINTS
 app.get('/quotes', (req, res) => {
     // search here is a *query*
     const search = req.query.search;
