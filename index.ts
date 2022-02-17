@@ -32,9 +32,7 @@ app.get("/", function (req, res) {
  `)
 })
 
-// app.get("/quotes", function (req, res) {
-//     res.send(quotes)
-// })
+
 
 app.get('/randomQuote', (req, res) => {
     const randomIndex = Math.floor(Math.random() * quotes.length)
