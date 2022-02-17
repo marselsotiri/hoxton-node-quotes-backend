@@ -95,20 +95,20 @@ router.get('/', (req, res) => {
         quotesToSend = quotesToSend.filter(
             (quote) => {
                 const authorOfQuote = authors.find(author => author.id === quote.authorId);
-                if(!authorOfQuote) return;
-          
+                if (!authorOfQuote) return;
+
                 return authorOfQuote.firstName.toUpperCase().includes(search.toUpperCase()) ||
-                  authorOfQuote.lastName.toUpperCase().includes(search.toUpperCase())
-              }
+                    authorOfQuote.lastName.toUpperCase().includes(search.toUpperCase())
+            }
         );
     }
 
     if (typeof age === "number") {
         quotesToSend = quotesToSend.filter(
             (quote) => {
-            const authorAge = authors.find(author => author.id === quote.authorId);
-            if(!authorAge) return;
-            return authorAge.age === age
+                const authorAge = authors.find(author => author.id === quote.authorId);
+                if (!authorAge) return;
+                return authorAge.age === age
             }
         );
     }
