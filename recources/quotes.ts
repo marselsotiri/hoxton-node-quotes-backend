@@ -84,7 +84,7 @@ export let quotes: Quote[] = [
 router.get('/', (req, res) => {
     // search here is a *query*
     const search = req.query.search;
-    const age = req.query.age;
+    const age = Number(req.query.age);
     // const idFrom = Number(req.query.idFrom)
     // const idTo = Number(req.query.idTo)
 
