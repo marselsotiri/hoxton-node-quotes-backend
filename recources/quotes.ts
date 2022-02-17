@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { json, Router } from "express";
 import { Author, authors } from "./authors";
 
 
@@ -79,6 +79,7 @@ export let quotes: Quote[] = [
     }
 ]
 
+
 // Quote ENDPOINTS
 router.get('/', (req, res) => {
     // search here is a *query*
@@ -87,10 +88,7 @@ router.get('/', (req, res) => {
     // const idFrom = Number(req.query.idFrom)
     // const idTo = Number(req.query.idTo)
 
-    let quotesToSend = quotes;
-
-
-
+    let quotesToSend: Quote[] = JSON.parse(JSON.stringify(quotes));
 
     if (typeof search === 'string') {
         console.log('Filtering quotes with search:', search);
@@ -115,27 +113,19 @@ router.get('/', (req, res) => {
         );
     }
 
+
+    for (const quote of quotesToSend) {
+        const author = authors.find((author) => author.id === quote.authorId);
+        //@ts-ignore
+        quote.author = author;
+    }
+
     // if (typeof idFrom === 'number' && !Number.isNaN(idFrom)) {
     //   quotesToSend = quotesToSend.filter(quote => quote.id >= idFrom)
     // }
 
     res.send(quotesToSend);
 });
-
-router.get('/', (req, res) => {
-    let quotesCopy = JSON.parse(JSON.stringify(quotes));
-
-    for (const quote of quotesCopy) {
-        const author = authors.find((author) => author.id === quote.authorId);
-        quote.author = author;
-    }
-
-    res.send(quotesCopy);
-});
-
-// router.get("/", function (req, res) {
-//     res.send(quotes)
-// })
 
 
 router.get('/:id', (req, res) => {
